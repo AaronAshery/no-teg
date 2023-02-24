@@ -1,161 +1,163 @@
+from __future__ import annotations
 import numpy as np
 import pandas as pd
-# from enum import Enum
+
+#no-teg is quick and dirty, in the future could evolve to a full scale tournament API
 
 
-class Master:
+#game could be reduced to a pd df
+#each game just a new row with their specs
+
+#game interface
+class Game:
+    """Initialize new game"""
+    def __init__(self):
+        self.name = None
+        self.rec_players = None
+        self.rec_tourney = None
+        self.labels = []
+
+    def set_name(self, name: str):
+        self.name = name
+    
+    def set_rec_players(self, rec_players: int):
+        self.rec_players = rec_players
+
+    def set_rec_tourney(self, rec_tourney):
+        self.rec_tourney = rec_tourney
+
+    def set_labels(self, labels: list[str]):
+        self.labels = labels
+
+    def get_labels(self):
+        return self.labels
+
+class FIFA(Game):
 
     def __init__(self):
-        self.event_index = 1
-        self.games = ["FIFA"] #bd fg
-        self.tourney_styles = ["Bracket-SE", "Round Robin"] #BSE, BDE, RR
-        self.events = pd.DataFrame({"Name":[], "Game":[], "Tournament":[]})
-        self.players = pd.DataFrame({"Name":[], "Player_ID":[]})
-        self.game_players = {}
-        self.game_matches = {}
+        self.name = "FIFA"
+        self.rec_players = 8 #useless?
+        self.rec_tourney = "Single_Elimination"
+        self.labels = []
 
-    def new_event(self,event_name, event_game, event_tournament):
-        if event_game == "FIFA":
-            event = FIFA(self.event_index, event_name, event_tournament)
-        eventDf = pd.DataFrame({"Name":[event_name], "Game":[event_game], "Tournament":[event_tournament]},index=[self.event_index])
-        self.events = pd.concat([self.events,eventDf])
-        return event
+   
 
-    def update_game_players(self, game, game_players_pd):
-        if game in self.game_players:
-            self.game_players[game] = pd.concat([self.game_players,game_players_pd])
-        else:
-             self.game_players[game] = game_players_pd
+#interface
+class Tourney:
 
-    def update_game_matches(self, game, game_matches_pd):
-        if game in self.game_matches:
-            self.game_matches[game] = pd.concat([self.game_matches,game_matches_pd])
-        else:
-             self.game_matches[game] = game_matches_pd
-
-    def get_events(self):
-        return self.events
-
-    def get_players(self):
-        return self.players
-
-    def get_game_players(self):
-        return self.game_players
-
-    def get_game_matches(self):
-        return self.game_matches
-
-class Event():
-
-    def __init__(self, event_index, event_name, tournament_style):
-        self.event_index = event_index
-        self.event_name = event_name
+    def __init__(self, game):
+        self.game = game
         self.players = []
-        self.max_players = None
-        self.tournament_style = tournament_style
-        self.locked = False
+        self.matchups = {}
 
-
-    def set_max_players(self, max_players):
-        self.max_players = max_players
-
-    def add_player(self, player):
+    def add_player(self, player: Player/Team):
         self.players.append(player)
 
-    def add_players(self, players):
-        for player in players:
-            self.players.append(player)
-
-    def set_tourney_style(self, tourney_style):
-        self.tournament_style = tourney_style
-    
-    
-class FIFA(Event):
-
-    def __init__(self, event_index, event_name, tournament_style):
-        super().__init__(event_index, event_name, tournament_style)
-        self.tourney = None
-        self.locked = False
-        self.event_index = event_index
-        self.players = pd.DataFrame({"Event_ID":[], "Name":[], "Team":[]})
-        self.matches = pd.DataFrame({"Event_ID":[], "Home":[], "Away":[], "Winner":[]})
-        self.matchup_count = 1
-
-    def add_player(self, name, team): #use player id
-        playerDf = pd.DataFrame({"Event_ID":[self.event_index], "Name":[name], "Team":[team]})
-        self.players = pd.concat([self.players,playerDf])
-
-    def get_players(self): #make in base class with possibility to override
-        if not self.locked:
-            self.locked = True
-            return self.players
-        else:
-            print("Game is locked")
-
-    def start_tournament(self):
-        if self.locked:
-            if self.tournament_style == "SEB":
-                self.tourney = SEB(self.players["Name"].tolist())
-
-    def get_first_round(self):
-        if self.locked:
-            matchups = self.tourney.get_round()
-            for matchup in matchups:
-                matchupDf = pd.DataFrame({"Event_ID":[self.event_index], "Home":[matchup[0]], "Away":[matchup[1]], "Winner":[None]},index=[self.matchup_count])
-                self.matches = pd.concat([self.matches,matchupDf])
-                self.matchup_count += 1
-        return self.matches
-
-    def get_next_round(self):
-        if self.locked and None not in self.matches.loc[:,"Winner"].tolist():
-            matchups = self.tourney.get_round()
-            for matchup in matchups:
-                print(matchup)
-                matchupDf = pd.DataFrame({"Event_ID":[self.event_index], "Home":[matchup[0]], "Away":[matchup[1]], "Winner":[None]},index=[self.matchup_count])
-                self.matches = pd.concat([self.matches,matchupDf])
-                self.matchup_count += 1
-        return self.matches #add winner to old matchups
-        
-    
-    def input_score(self, matchup_ID, winner):
-        self.matches.at[matchup_ID,"Winner"] = winner
-        if winner == "Home":
-            self.tourney.eliminate(self.matches.at[matchup_ID,"Away"])
-        else:
-            self.tourney.eliminate(self.matches.at[matchup_ID,"Home"])
-        
-    def randomize(self):
-        self.tourney.randomize()
-
-    def get_all_matchups(self):
-        if self.tourney.over:
-            return self.matches
-
-class SEB:
-
-    def __init__(self, players):
+    def add_players(self, players: list[Player/Team]):
         self.players = players
-        self.over = False
 
-    def randomize(self):
+    def randomize_matchups(self):
         np.random.shuffle(self.players)
-    
-    def get_round(self):
-        matchups = []
-        count1 = 0
-        count2 = 1
-        for i in range(len(self.players)//2):
-            matchups.append((self.players[count1],self.players[count2]))
-            count1 += 2
-            count2 += 2
-        return matchups
 
-    def eliminate(self, player):
-        eliminated = self.players.pop(self.players.index(player))
-        if len(self.players) == 1:
-            print("Congrats to {:s}!".format(self.players[0]))
-            self.over = True
+    def start(self, additional_stats=None):
+        """Set all matchups"""
+        pass
 
+    def input_result(self):
+        pass
+
+    def get_matchups(self):
+        return self.matchups
+
+    #can take in a round to print the round
+    def print_matchups(self):
+        pass
+
+    def print_results(self):
+        pass
+
+class Single_Elimination(Tourney):
+
+     # ex matchups 4 person SE {
+        #    1:{Home: "Aaron", Away: "Xandra", Next: 3, Home_Score: 2, Away_Score: 1},
+        #    2:{Home: "Tiffany", Away: "Lucas", Next: 3, Home_Score: 4, Away_Score: 0},
+        #    3:{Home: "Aaron", Away: "Lucas", Next: None, Home_Score: None, Away_Score: None}
+        #   }
+    def start(self):
+        extra_labels = self.game.get_labels()
+        #set entire bracket
+        #assume number of participants is a power of 2
+        self.started = True
+        total_matches = len(self.players) - 1
+        num_rounds = np.ceil(np.log2(len(self.players)))
+        num_byes = num_rounds ** 2 - len(self.players)
+        matchup_counter = 1
+        p1 = 0
+        p2 = 1
+        round_matches = len(self.players) // 2 #players power of 2
+        round = 1
+        updating_round_matches = 0
+        while round_matches > 0:
+            updating_round_matches += round_matches
+            for i in range(round_matches):
+                if round == 1:
+                    home, away = self.players[p1].get_name(), self.players[p2].get_name()
+                else:
+                    home, away = None, None
+                if round != num_rounds:
+                    next = updating_round_matches + (i // 2) + 1
+                else:
+                    next = None
+                self.matchups[matchup_counter] = {"Home": home, "Away": away, "Next": next, "Home_Score": None, "Away_Score": None}
+                matchup_counter += 1
+                for stat in extra_labels:
+                    self.matchups[stat] = None
+                p1 += 2
+                p2 += 2
+            round_matches = round_matches // 2
+            round += 1
+            
+    def input_result(self, matchup_id, away_score, home_score, extra_stats=[]):
+        self.matchups[matchup_id]["Home_Score"] = home_score
+        self.matchups[matchup_id]["Away_Score"] = away_score
+        home = self.matchups[matchup_id]["Home"]
+        away = self.matchups[matchup_id]["Away"]
+        if home_score > away_score:
+            winner = home
+        elif away_score > home_score:
+            winner = away
+        else:
+            winner = "Tie"
+            print("This format does not support ties") #dont let teis be input
+            return False
+        next = self.matchups[matchup_id]["Next"]
+        if next != None:
+            if matchup_id % 2 == 0:
+                self.matchups[next]["Home"] = winner
+            else:
+                self.matchups[next]["Away"] = winner
+        extra_labels = self.game.get_labels()
+        if len(extra_stats) == len(extra_labels):
+            for i in range(len(extra_stats)):
+                self.matchups[matchup_id][extra_labels[i]] = extra_stats[i]
+
+    def print_matchups(self):
+        for i in range(len(self.matchups)):
+            matchup_id = i+1
+            home = self.matchups[matchup_id]["Home"]
+            away = self.matchups[matchup_id]["Away"]
+            if home != None and away != None:
+                print("{:d}: {:s} (A) vs {:s} (H)".format(matchup_id, away, home))
+
+    def print_results(self):
+        for i in range(len(self.matchups)):
+            matchup_id = i+1
+            home = self.matchups[matchup_id]["Home"]
+            away = self.matchups[matchup_id]["Away"]
+            home_score = self.matchups[matchup_id]["Home_Score"]
+            away_score = self.matchups[matchup_id]["Away_Score"]
+            if home != None and away != None and home_score != None and away_score != None:
+                print("{:d}: {:s} ({:d}) vs {:s} ({:d})".format(matchup_id, away, away_score, home, home_score))
 
 class Player:
 
@@ -166,52 +168,45 @@ class Player:
     def set_age(self, age): #DOB?
         self.age = age
 
+    def get_name(self):
+        return self.name
 
+
+class Team:
+
+    def __inite__(self, name: str):
+        self.name = name
+        self.players = []
+
+    def add_player(self, player: Player):
+        self.players.appened(player)
+
+    def add_players(self, players: list[Player]):
+        self.players = players
+
+    def get_name(self):
+        return self.name
+    
+    def get_players(self):
+        return self.players
+    
 
 def example1():
-
-    p1 = Player("Aaron")
-    p1.set_age(22)
+    MyTourney = Single_Elimination(FIFA())
+    p1 = Player("Aaron") 
     p2 = Player("Xandra")
-    p3 = Player("Tiffany")
-    p4 = Player("Lucas")
+    p3 = Player("Lucas")
+    p4 = Player("Tiffany")
+    MyTourney.add_players([p1,p2,p3,p4])
+    MyTourney.randomize_matchups()
+    MyTourney.start()
+    MyTourney.print_matchups()
+    MyTourney.input_result(1, 2, 3)
+    MyTourney.input_result(2, 10, 1)
+    MyTourney.input_result(3,4,1)
+    MyTourney.print_results()
 
-    master = Master()
-    event = master.new_event("Fifa", "FIFA", "SEB")
-    event.add_player("Aaron", "Everton")
-    event.add_player("Xandra", "Barca")
-    event.add_player("Tiff", "Liverpool")
-    event.add_player("Lucas", "Man U")
-    players = event.get_players()
-    event.start_tournament()
-    event.randomize()
-    event.get_first_round()
-    master.update_game_players("FIFA", players)
-    # print()
-    # print(master.get_players())
-    # print()
-    # print(master.get_events())
-    # print()
-    # print(master.get_game_players()["FIFA"])
-    # print()
-    # print(event.matches)
-    event.input_score(1,"Home")
-    event.input_score(2,"Away")
-    # print(event.matches)
-    print()
-    print(master.get_game_matches())
-    event.get_next_round()
 
-    #bug cuases None to go in dict and then cant concatenate
-   # master.update_game_matches("FIFA", event.get_all_matchups())
-    # print(event.matches)
-    event.input_score(3, "Home")
-    master.update_game_matches("FIFA", event.get_all_matchups())
-    
-    print()
-    print(master.get_game_matches())
-
-    return event
 
     
 

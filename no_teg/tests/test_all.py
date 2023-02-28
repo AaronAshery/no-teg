@@ -117,6 +117,14 @@ def test_SE_custom_game_tourney():
     p6 = Player("Rhea")
     p7 = Player("Loki")
     p8 = Player("Richard")
+    p9 = Player("Owen")
+    p10 = Player("Saturn")
+    p11 = Player("Mo")
+    p12 = Player("Sergio")
+    p13 = Player("Nick")
+    p14 = Player("John")
+    p15 = Player("Alex")
+    p16 = Player("Ben")
 
     Team1 = Team("t1")
     Team1.add_player(p1)
@@ -127,14 +135,23 @@ def test_SE_custom_game_tourney():
     Team3.add_players([p5,p6])
     Team4 = Team("t4")
     Team4.add_players([p7,p8])
+    Team5 = Team("t5")
+    Team5.add_player(p9)
+    Team5.add_player(p10)
+    Team6 = Team("t6")
+    Team6.add_players([p11,p12])
+    Team7 = Team("t7")
+    Team7.add_players([p13,p14])
+    Team8 = Team("t8")
+    Team8.add_players([p15,p16])
 
-    Tourney2v2 = Single_Elimination(MyGame())
-    Tourney2v2.add_players[Team1, Team2, Team3, Team4]
+    Tourney2v2 = Single_Elimination(MyGame)
+    Tourney2v2.add_players([Team1, Team2, Team3, Team4, Team5, Team6, Team7, Team8])
     Tourney2v2.start()
     assert Tourney2v2.matchups[1]["Home"] == "t1"
     assert Tourney2v2.matchups[1]["Away"] == "t2"
     assert Tourney2v2.matchups[1]["Next"] == 5
-    assert Tourney2v2.matchups[1]["Home Fouls"] == 0
+    assert Tourney2v2.matchups[1]["Home Fouls"] == None
     Tourney2v2.input_result(1, 21, 14, [2,4])
     Tourney2v2.input_result(2, 21, 20, [0,1])
     Tourney2v2.input_result(3, 18, 21, [1,1])
@@ -142,12 +159,12 @@ def test_SE_custom_game_tourney():
     assert Tourney2v2.matchups[5]["Away"] == "t2"
     assert Tourney2v2.matchups[5]["Home"] == "t4"
     assert Tourney2v2.matchups[5]["Next"] == 7
-    assert Tourney2v2.matchups[1]["Home Fouls"] == 4
+    assert Tourney2v2.matchups[1]["Home Fouls"] == 2
     Tourney2v2.input_result(5, 21, 19, [0, 0])   
     Tourney2v2.input_result(6, 18, 21, [7, 9])  
     assert Tourney2v2.matchups[7]["Home"] == "t7"
     assert Tourney2v2.matchups[7]["Away"] == "t2"
     assert Tourney2v2.matchups[7]["Next"] == None
-    assert Tourney2v2.matchups[6]["Away Fouls"] == 7
+    assert Tourney2v2.matchups[6]["Away Fouls"] == 9
     Tourney2v2.input_result(7, 21, 16, [3, 2])
     assert Tourney2v2.matchups[7]["Away_Score"] > Tourney2v2.matchups[7]["Home_Score"]

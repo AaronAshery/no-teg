@@ -85,6 +85,7 @@ class Single_Elimination(Tourney):
         #   }
     def start(self):
         extra_labels = self.game.get_labels()
+        print("EXTRA LABELS: " + str(extra_labels))
         #set entire bracket
         #assume number of participants is a power of 2
         self.started = True
@@ -109,9 +110,9 @@ class Single_Elimination(Tourney):
                 else:
                     next = None
                 self.matchups[matchup_counter] = {"Home": home, "Away": away, "Next": next, "Home_Score": None, "Away_Score": None}
-                matchup_counter += 1
                 for stat in extra_labels:
-                    self.matchups[stat] = None
+                    self.matchups[matchup_counter][stat] = None
+                matchup_counter += 1
                 p1 += 2
                 p2 += 2
             round_matches = round_matches // 2

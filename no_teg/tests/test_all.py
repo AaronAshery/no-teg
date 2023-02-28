@@ -10,22 +10,26 @@ p2 = Player("Xandra")
 p3 = Player("Lucas")
 p4 = Player("Tiffany")
 
+
 def test_Player_get_name():
     p1 = Player("Aaron")
     assert p1.get_name() == "Aaron"
+
 
 def test_Player_set_age():
     p1.set_age(22)
     assert p1.age == 22
 
+
 def test_Tourney_add_players():
     TestTourney1.add_players([p1, p2, p3, p4])
     assert TestTourney1.players == [p1, p2, p3, p4]
 
-#use a real error formula to check randomization
+
+# use a real error formula to check randomization
 def test_Tourney_randomize_matchups():
     times_first = {p1: 0, p2: 0, p3: 0, p4: 0}
-    times_in_order = 0 #1/24 chance
+    times_in_order = 0  # 1/24 chance
     trials = 2000
     for i in range(trials):
         TestTourney1.randomize_matchups()
@@ -34,17 +38,21 @@ def test_Tourney_randomize_matchups():
             times_in_order += 1
     for player in TestTourney1.players:
         expected = trials / 4
-        error = .2
-        assert times_first[player] > expected - (expected * error) and times_first[player] < expected + (expected * error)
-    expected = trials / 24 #4!
-    error = .2
+        error = 0.2
+        assert times_first[player] > expected - (expected * error) and times_first[player] < expected + (
+            expected * error
+        )
+    expected = trials / 24  # 4!
+    error = 0.2
     assert times_in_order > expected - (expected * error) and times_in_order < expected + (expected * error)
+
 
 TestTourneyOrdered = Single_Elimination(FIFA())
 p5 = Player("Aaron")
 p6 = Player("Xandra")
 p7 = Player("Lucas")
 p8 = Player("Tiffany")
+
 
 def test_SE_start():
     TestTourneyOrdered.add_players([p1, p2, p3, p4])
@@ -59,8 +67,10 @@ def test_SE_start():
     assert TestTourneyOrdered.matchups[3]["Home"] == None
     assert TestTourneyOrdered.matchups[3]["Away"] == None
 
+
 def test_SE_get_matchups():
     assert TestTourneyOrdered.get_matchups() == TestTourneyOrdered.matchups
+
 
 def test_SE_input_result():
     TestTourneyOrdered.input_result(1, 0, 1)
@@ -74,7 +84,9 @@ def test_SE_input_result():
     assert TestTourneyOrdered.matchups[3]["Next"] == None
     assert TestTourneyOrdered.input_result(3, 1, 1) == False
 
+
 myGame = Game()
+
 
 def test_game():
     assert myGame.name == None
@@ -82,21 +94,26 @@ def test_game():
     assert myGame.rec_tourney == None
     assert myGame.labels == []
 
+
 def test_game_set_name():
     myGame.set_name("Aaron's Awesome Game")
     assert myGame.name == "Aaron's Awesome Game"
+
 
 def test_game_set_rec_players():
     myGame.set_rec_players(2)
     assert myGame.rec_players == 2
 
+
 def test_game_set_rec_tourney():
     myGame.set_rec_tourney(Single_Elimination)
     assert myGame.rec_tourney == Single_Elimination
 
+
 def test_game_set_labels():
     myGame.set_labels(["Total Jokers Used"])
     assert myGame.labels == ["Total Jokers Used"]
+
 
 def test_game_get_labels():
     assert myGame.get_labels() == ["Total Jokers Used"]
@@ -104,11 +121,12 @@ def test_game_get_labels():
 
 ### INTEGRATION TESTS ###
 
+
 def test_SE_custom_game_tourney():
     MyGame = Game()
     MyGame.set_name("2v2 Basketball")
     MyGame.set_labels(["Home Fouls", "Away Fouls"])
-    
+
     p1 = Player("Aaron")
     p2 = Player("Xandra")
     p3 = Player("Lucas")
@@ -130,20 +148,20 @@ def test_SE_custom_game_tourney():
     Team1.add_player(p1)
     Team1.add_player(p2)
     Team2 = Team("t2")
-    Team2.add_players([p3,p4])
+    Team2.add_players([p3, p4])
     Team3 = Team("t3")
-    Team3.add_players([p5,p6])
+    Team3.add_players([p5, p6])
     Team4 = Team("t4")
-    Team4.add_players([p7,p8])
+    Team4.add_players([p7, p8])
     Team5 = Team("t5")
     Team5.add_player(p9)
     Team5.add_player(p10)
     Team6 = Team("t6")
-    Team6.add_players([p11,p12])
+    Team6.add_players([p11, p12])
     Team7 = Team("t7")
-    Team7.add_players([p13,p14])
+    Team7.add_players([p13, p14])
     Team8 = Team("t8")
-    Team8.add_players([p15,p16])
+    Team8.add_players([p15, p16])
 
     Tourney2v2 = Single_Elimination(MyGame)
     Tourney2v2.add_players([Team1, Team2, Team3, Team4, Team5, Team6, Team7, Team8])
@@ -152,16 +170,16 @@ def test_SE_custom_game_tourney():
     assert Tourney2v2.matchups[1]["Away"] == "t2"
     assert Tourney2v2.matchups[1]["Next"] == 5
     assert Tourney2v2.matchups[1]["Home Fouls"] == None
-    Tourney2v2.input_result(1, 21, 14, [2,4])
-    Tourney2v2.input_result(2, 21, 20, [0,1])
-    Tourney2v2.input_result(3, 18, 21, [1,1])
-    Tourney2v2.input_result(4, 10, 21, [4,3])
+    Tourney2v2.input_result(1, 21, 14, [2, 4])
+    Tourney2v2.input_result(2, 21, 20, [0, 1])
+    Tourney2v2.input_result(3, 18, 21, [1, 1])
+    Tourney2v2.input_result(4, 10, 21, [4, 3])
     assert Tourney2v2.matchups[5]["Away"] == "t2"
     assert Tourney2v2.matchups[5]["Home"] == "t4"
     assert Tourney2v2.matchups[5]["Next"] == 7
     assert Tourney2v2.matchups[1]["Home Fouls"] == 2
-    Tourney2v2.input_result(5, 21, 19, [0, 0])   
-    Tourney2v2.input_result(6, 18, 21, [7, 9])  
+    Tourney2v2.input_result(5, 21, 19, [0, 0])
+    Tourney2v2.input_result(6, 18, 21, [7, 9])
     assert Tourney2v2.matchups[7]["Home"] == "t7"
     assert Tourney2v2.matchups[7]["Away"] == "t2"
     assert Tourney2v2.matchups[7]["Next"] == None

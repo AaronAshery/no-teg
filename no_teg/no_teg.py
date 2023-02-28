@@ -174,12 +174,12 @@ class Player:
 
 class Team:
 
-    def __inite__(self, name: str):
+    def __init__(self, name: str):
         self.name = name
         self.players = []
 
     def add_player(self, player: Player):
-        self.players.appened(player)
+        self.players.append(player)
 
     def add_players(self, players: list[Player]):
         self.players = players

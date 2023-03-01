@@ -1,6 +1,7 @@
 from __future__ import annotations
 import numpy as np
-import pandas as pd
+
+# import pandas as pd
 
 # no-teg is quick and dirty, in the future could evolve to a full scale tournament API
 
@@ -89,9 +90,9 @@ class Single_Elimination(Tourney):
         # set entire bracket
         # assume number of participants is a power of 2
         self.started = True
-        total_matches = len(self.players) - 1
+        # total_matches = len(self.players) - 1
         num_rounds = np.ceil(np.log2(len(self.players)))
-        num_byes = num_rounds**2 - len(self.players)
+        # num_byes = num_rounds**2 - len(self.players)
         matchup_counter = 1
         p1 = 0
         p2 = 1
@@ -138,7 +139,7 @@ class Single_Elimination(Tourney):
             print("This format does not support ties")  # dont let teis be input
             return False
         next = self.matchups[matchup_id]["Next"]
-        if next != None:
+        if next is not None:
             if matchup_id % 2 == 0:
                 self.matchups[next]["Home"] = winner
             else:
@@ -153,7 +154,7 @@ class Single_Elimination(Tourney):
             matchup_id = i + 1
             home = self.matchups[matchup_id]["Home"]
             away = self.matchups[matchup_id]["Away"]
-            if home != None and away != None:
+            if home is not None and away is not None:
                 print("{:d}: {:s} (A) vs {:s} (H)".format(matchup_id, away, home))
 
     def print_results(self):
@@ -163,7 +164,7 @@ class Single_Elimination(Tourney):
             away = self.matchups[matchup_id]["Away"]
             home_score = self.matchups[matchup_id]["Home_Score"]
             away_score = self.matchups[matchup_id]["Away_Score"]
-            if home != None and away != None and home_score != None and away_score != None:
+            if home is not None and away is not None and home_score is not None and away_score is not None:
                 print("{:d}: {:s} ({:d}) vs {:s} ({:d})".format(matchup_id, away, away_score, home, home_score))
 
 

@@ -186,3 +186,13 @@ def test_SE_custom_game_tourney():
     assert Tourney2v2.matchups[6]["Away Fouls"] == 9
     Tourney2v2.input_result(7, 21, 16, [3, 2])
     assert Tourney2v2.matchups[7]["Away_Score"] > Tourney2v2.matchups[7]["Home_Score"]
+
+
+####Test Classes####
+
+
+class TestPlayer:
+    def test_age(self):
+        p1 = Player("Aaron")
+        p1.set_age(22)
+        assert p1.age == 22

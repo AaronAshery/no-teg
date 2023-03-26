@@ -1,2 +1,3 @@
-from ._version import __version__
 from .no_teg import *
+
+__version__ = "0.0.1"

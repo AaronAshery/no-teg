@@ -86,7 +86,7 @@ class Single_Elimination(Tourney):
     #   }
     def start(self):
         extra_labels = self.game.get_labels()
-        print("EXTRA LABELS: " + str(extra_labels))
+        # print("EXTRA LABELS: " + str(extra_labels))
         # set entire bracket
         # assume number of participants is a power of 2
         self.started = True

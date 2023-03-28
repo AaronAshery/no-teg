@@ -21,6 +21,13 @@ def test_Player_set_age():
     assert p1.age == 22
 
 
+def test_Tourney_add_player():
+    TestTourney2 = Single_Elimination(FIFA())
+    p1 = Player("Aaron")
+    TestTourney2.add_player(p1)
+    assert TestTourney2.players == [p1]
+
+
 def test_Tourney_add_players():
     TestTourney1.add_players([p1, p2, p3, p4])
     assert TestTourney1.players == [p1, p2, p3, p4]
@@ -30,7 +37,7 @@ def test_Tourney_add_players():
 def test_Tourney_randomize_matchups():
     times_first = {p1: 0, p2: 0, p3: 0, p4: 0}
     times_in_order = 0  # 1/24 chance
-    trials = 2000
+    trials = 10000
     for i in range(trials):
         TestTourney1.randomize_matchups()
         times_first[TestTourney1.players[0]] += 1
@@ -186,6 +193,57 @@ def test_SE_custom_game_tourney():
     assert Tourney2v2.matchups[6]["Away Fouls"] == 9
     Tourney2v2.input_result(7, 21, 16, [3, 2])
     assert Tourney2v2.matchups[7]["Away_Score"] > Tourney2v2.matchups[7]["Home_Score"]
+
+
+def test_RR_even():
+    p1 = Player("Aaron")
+    p2 = Player("Xandra")
+    p3 = Player("Lucas")
+    p4 = Player("Tiffany")
+    MyGame = Game()
+    TourneyRR = Round_Robin(MyGame)
+    TourneyRR.add_players([p1, p2, p3, p4])
+    TourneyRR.start()
+    matchups = TourneyRR.get_matchups()
+    assert len(matchups) == 6  # summation(num_players - 1) == 6
+    # test everyone has same number of games
+    games = {'Aaron': 0, 'Xandra': 0, 'Lucas': 0, 'Tiffany': 0}
+    for v in matchups.values():
+        games[v['Home']] += 1
+        games[v['Away']] += 1
+    assert games['Aaron'] == 3
+    assert games['Xandra'] == 3
+    assert games['Lucas'] == 3
+    assert games['Tiffany'] == 3
+    TourneyRR.input_result(1, 2, 1)
+    print(matchups)
+    assert matchups[1]["Away_Score"] == 2
+    assert matchups[1]["Home_Score"] == 1
+
+
+def test_RR_odd():
+    p1 = Player("Aaron")
+    p2 = Player("Xandra")
+    p3 = Player("Lucas")
+    p4 = Player("Tiffany")
+    p5 = Player("Rhea")
+    MyGame = Game()
+    TourneyRR = Round_Robin(MyGame)
+    TourneyRR.add_players([p1, p2, p3, p4, p5])
+    TourneyRR.start()
+    matchups = TourneyRR.get_matchups()
+    TourneyRR.print_matchups()
+    assert len(matchups) == 10  # summation(num_players - 1) == 1 + 2 + 3 + 4 == 10
+    # test everyone has same number of games
+    games = {'Aaron': 0, 'Xandra': 0, 'Lucas': 0, 'Tiffany': 0, 'Rhea': 0}
+    for v in matchups.values():
+        games[v['Home']] += 1
+        games[v['Away']] += 1
+    assert games['Aaron'] == 4
+    assert games['Xandra'] == 4
+    assert games['Lucas'] == 4
+    assert games['Tiffany'] == 4
+    assert games['Rhea'] == 4
 
 
 ####Test Classes####

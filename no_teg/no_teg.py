@@ -231,6 +231,7 @@ class Round_Robin(Tourney):
             for i in range(len(extra_stats)):
                 self.matchups[matchup_id][extra_labels[i]] = extra_stats[i]
 
+
 class Player:
     def __init__(self, name):
         self.name = name

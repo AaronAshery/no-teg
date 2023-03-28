@@ -213,6 +213,7 @@ def test_RR_even():
     assert matchups[1]["Away_Score"] == 2
     assert matchups[1]["Home_Score"] == 1
 
+
 def test_RR_odd():
     p1 = Player("Aaron")
     p2 = Player("Xandra")
@@ -225,7 +226,7 @@ def test_RR_odd():
     TourneyRR.start()
     matchups = TourneyRR.get_matchups()
     TourneyRR.print_matchups()
-    assert len(matchups) == 10 # summation(num_players - 1) == 1 + 2 + 3 + 4 == 10
+    assert len(matchups) == 10  # summation(num_players - 1) == 1 + 2 + 3 + 4 == 10
     # test everyone has same number of games
     games = {'Aaron': 0, 'Xandra': 0, 'Lucas': 0, 'Tiffany': 0, 'Rhea': 0}
     for v in matchups.values():

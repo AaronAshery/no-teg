@@ -62,20 +62,20 @@ class Tourney:
 
     def start(self, additional_stats=None):
         """Set all matchups"""
-        pass
+        pass  # pragma: no cover
 
     def input_result(self):
-        pass
+        pass  # pragma: no cover
 
     def get_matchups(self):
         return self.matchups
 
     # can take in a round to print the round
     def print_matchups(self):
-        pass
+        pass  # pragma: no cover
 
     def print_results(self):
-        pass
+        pass  # pragma: no cover
 
 
 class Single_Elimination(Tourney):
@@ -157,7 +157,7 @@ class Single_Elimination(Tourney):
             if home is not None and away is not None:
                 print("{:d}: {:s} (A) vs {:s} (H)".format(matchup_id, away, home))
 
-    def print_results(self):
+    def print_results(self):  # pragma: no cover
         for i in range(len(self.matchups)):
             matchup_id = i + 1
             home = self.matchups[matchup_id]["Home"]
@@ -213,7 +213,7 @@ class Round_Robin(Tourney):
             if home is not None and away is not None:
                 print("{:d}: {:s} (A) vs {:s} (H)".format(matchup_id, away, home))
 
-    def print_results(self):
+    def print_results(self):  # pragma: no cover
         for i in range(len(self.matchups)):
             matchup_id = i + 1
             home = self.matchups[matchup_id]["Home"]

@@ -21,6 +21,13 @@ def test_Player_set_age():
     assert p1.age == 22
 
 
+def test_Tourney_add_player():
+    TestTourney2 = Single_Elimination(FIFA())
+    p1 = Player("Aaron")
+    TestTourney2.add_player(p1)
+    assert TestTourney2.players == [p1]
+
+
 def test_Tourney_add_players():
     TestTourney1.add_players([p1, p2, p3, p4])
     assert TestTourney1.players == [p1, p2, p3, p4]
@@ -30,7 +37,7 @@ def test_Tourney_add_players():
 def test_Tourney_randomize_matchups():
     times_first = {p1: 0, p2: 0, p3: 0, p4: 0}
     times_in_order = 0  # 1/24 chance
-    trials = 5000
+    trials = 10000
     for i in range(trials):
         TestTourney1.randomize_matchups()
         times_first[TestTourney1.players[0]] += 1

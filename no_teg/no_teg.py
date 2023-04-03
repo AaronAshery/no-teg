@@ -1,42 +1,134 @@
 from __future__ import annotations
 import numpy as np
 
-# import pandas as pd
 
-# no-teg is quick and dirty, in the future could evolve to a full scale tournament API
-
-
-# game could be reduced to a pd df
-# each game just a new row with their specs
-
-
-# game interface
 class Game:
-    """Initialize new game"""
+    """
+    A class to represent a game.
+
+    ...
+
+    Attributes
+    ----------
+    name : str
+        name of the game
+    rec_players : int
+        amount of players recommended
+    rec_tourney : Tourney
+        tournament type recommended
+
+    Methods
+    -------
+    set_name(name):
+        Sets the name of the game.
+    set_rec_players(rec_players):
+        Sets the recommended amount of players.
+    set_rec_tourney(rec_tourney):
+        Sets the recommended tournament type.
+    set_labels(labels):
+        Sets the labels for additional stat tracking for the game.
+    get_labels():
+        Gets the labels for the game.
+    """
 
     def __init__(self):
+        """
+        Constructs the attributes of the Game class.
+
+        Everything is empty upon construction and will need to be set with the class methods.
+
+        Parameters
+        ----------
+        None
+        """
+
         self.name = None
         self.rec_players = None
         self.rec_tourney = None
         self.labels = []
 
     def set_name(self, name: str):
+        """
+        Sets the name of the game.
+
+        Parameters
+        ----------
+        name : str
+            the name of the person
+
+        Returns
+        -------
+        None
+        """
+
         self.name = name
 
     def set_rec_players(self, rec_players: int):
+        """
+        Sets the recommended amount of players.
+
+        Parameters
+        ----------
+        rec_players : int
+            the recommended amount of players
+
+        Returns
+        -------
+        None
+        """
         self.rec_players = rec_players
 
     def set_rec_tourney(self, rec_tourney):
+        """
+        Sets the recommended tournament type.
+
+        Parameters
+        ----------
+        rec_tourney : Tourney
+            the recommended tournament type
+
+        Returns
+        -------
+        None
+        """
         self.rec_tourney = rec_tourney
 
     def set_labels(self, labels: list[str]):
+        """
+        Sets the labels for additional stat tracking for the game.
+
+        Parameters
+        ----------
+        labels : list of str
+            the labels for additional stat tracking
+
+        Returns
+        -------
+        None
+        """
         self.labels = labels
 
     def get_labels(self):
+        """
+        Gets the labels for the game.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        self.labels : list of str
+            the labels for additional stat tracking
+        """
         return self.labels
 
 
 class FIFA(Game):
+    """
+    A subclass of Game to represent FIFA.
+    """
+
     def __init__(self):
         self.name = "FIFA"
         self.rec_players = 8  # useless?
@@ -44,8 +136,41 @@ class FIFA(Game):
         self.labels = []
 
 
-# interface
 class Tourney:
+    """
+    A interface-like class to represent a tournament.
+
+    ...
+
+    Attributes
+    ----------
+    game: Game
+        the game the tournament is managing
+    players: list of Player/Team
+        the players or teams that the tournament is managing
+    matchups: dict of {int : dict}
+        the matchups and associated data
+
+    Methods
+    -------
+    add_player(player):
+        adds a player to the tournament
+    add_players(players):
+        sets the players of the tournament
+    randomize_matchups():
+        randomizes the order of the players
+    start():
+        starts the tournament by initializing all the matchups
+    input_result():
+        inputs the result of concluded matchup
+    get_matchups():
+        returns the tournament matchups
+    print_matchups():
+        prints the tournament machups
+    print_results():
+        prints just the concluded tournament matchups
+    """
+
     def __init__(self, game):
         self.game = game
         self.players = []
@@ -60,7 +185,7 @@ class Tourney:
     def randomize_matchups(self):
         np.random.shuffle(self.players)
 
-    def start(self, additional_stats=None):
+    def start(self):
         """Set all matchups"""
         pass  # pragma: no cover
 

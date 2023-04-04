@@ -4,6 +4,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 from recommonmark.transform import AutoStructify
+import groundwork_sphinx_theme
 
 def setup(app):
     app.add_config_value('recommonmark_config', {
@@ -37,3 +38,4 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'groundwork'
 html_static_path = ['_static']
+html_theme_path = [groundwork_sphinx_theme.get_html_theme_path()]

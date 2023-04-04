@@ -5,6 +5,9 @@
 
 from recommonmark.transform import AutoStructify
 import sphinx_rtd_theme
+import os
+import sys
+sys.path.insert(0, os.path.abspath('./../no_teg'))
 
 def setup(app):
     app.add_config_value('recommonmark_config', {
@@ -25,7 +28,10 @@ master_doc="index"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['recommonmark']
+extensions = ['recommonmark',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.napoleon']
 source_suffix = ['.rst', '.md']
 
 templates_path = ['_templates']

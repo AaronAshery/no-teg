@@ -19,6 +19,8 @@ copyright = '2023, Aaron Ashery'
 author = 'Aaron Ashery'
 release = '0.2.0'
 
+master_doc="index"
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 

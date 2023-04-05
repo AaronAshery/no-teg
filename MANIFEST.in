@@ -3,6 +3,7 @@ graft no_teg
 include LICENSE
 include README.md
 include *.md
+include *.txt
 
 include .bumpversion.cfg
 include pyproject.toml

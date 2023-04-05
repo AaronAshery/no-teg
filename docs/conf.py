@@ -5,7 +5,6 @@
 
 from recommonmark.transform import AutoStructify
 import sphinx_rtd_theme
-import numpydoc
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
@@ -39,6 +38,8 @@ source_suffix = ['.rst', '.md']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+autodoc_mock_imports = ["numpy", "numpydoc"]
 
 
 

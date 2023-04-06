@@ -1,11 +1,11 @@
 # Welcome to no-teg's documentation!
 
 
-## Install
+# Install
 
 `pip install no-teg`
 
-## Usage example: Create and run a basic single elimination tourament.
+# Usage example: Create and run a basic single elimination tourament.
 ```python
 import no_teg as nt
 
@@ -46,7 +46,7 @@ MyTourney.print_results()
 
 ```
 
-## Documentation
+# Documentation
 
 ```eval_rst
 
@@ -60,12 +60,12 @@ MyTourney.print_results()
 * :ref:`modindex`
 ```
 
-## Further Examples
+# Further Examples
 ```python
 import no_teg as nt
 ```
 
-# Players
+## Players
 ```python
 
 p1 = nt.Player("P1")
@@ -77,7 +77,7 @@ p2 = nt.Player()
 p2.set_name("P2")
 ```
 
-# Team
+## Team
 ```python
 
 team1 = nt.Team("T1")
@@ -86,7 +86,7 @@ team1.get_name()
 'T1'
 ```
 
-# Game
+## Game
 ```python
 
 PingPong = nt.Game()
@@ -97,7 +97,7 @@ PingPong.set_labels(["Aces"])
 ```
 
 
-# Round-Robin Tournament
+## Round-Robin Tournament
 ```python
 #initiate more players
 p3 = nt.Player("P3")

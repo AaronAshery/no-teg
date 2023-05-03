@@ -80,17 +80,27 @@ def test_SE_get_matchups():
 
 
 def test_SE_input_result():
-    TestTourneyOrdered.input_result(1, 0, 1)
+    TestTourneyOrdered.input_result(1, 0, 1, [])
     assert TestTourneyOrdered.matchups[1]["Away_Score"] == 0
     assert TestTourneyOrdered.matchups[1]["Home_Score"] == 1
     assert TestTourneyOrdered.matchups[3]["Away"] == "Aaron"
-    TestTourneyOrdered.input_result(2, 4, 2)
+    TestTourneyOrdered.input_result(2, 4, 2, [])
     assert TestTourneyOrdered.matchups[2]["Away_Score"] == 4
     assert TestTourneyOrdered.matchups[2]["Home_Score"] == 2
     assert TestTourneyOrdered.matchups[3]["Home"] == "Tiffany"
     assert TestTourneyOrdered.matchups[3]["Next"] == None
-    assert TestTourneyOrdered.input_result(3, 1, 1) == False
+    assert TestTourneyOrdered.input_result(3, 1, 1, []) == False
 
+
+TourneyByes = Single_Elimination(FIFA())
+
+def test_byes():
+    TourneyByes.add_players([p1,p2,p3,p4,p5,p6])
+    assert len(TourneyByes.players) == 6
+    TourneyByes.start()
+    assert len(TourneyByes.players) == 8
+    matchups = TourneyByes.get_matchups()
+    assert matchups[1]['Home'] == 'Bye'
 
 myGame = Game()
 

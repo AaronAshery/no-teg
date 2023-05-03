@@ -326,6 +326,14 @@ class Single_Elimination(Tourney):
         labels = self.game.get_labels()
         self.started = True
         num_rounds = np.ceil(np.log2(len(self.players)))
+        num_players = len(self.players)
+        num_byes = int(2 ** num_rounds - num_players)
+        if num_byes > 0:
+            players_with_byes = num_byes * 2
+            interval = players_with_byes // num_byes
+            for i in range(num_byes):
+                self.players.insert(i * interval + i, None)
+
         matchup_counter = 1
         p1 = 0
         p2 = 1
@@ -336,7 +344,8 @@ class Single_Elimination(Tourney):
             updating_round_matches += round_matches
             for i in range(round_matches):
                 if round == 1:
-                    home, away = self.players[p1].get_name(), self.players[p2].get_name()
+                    home = self.players[p1].get_name() if self.players[p1] is not None else "Bye"
+                    away = self.players[p2].get_name() if self.players[p2] is not None else "Bye"
                 else:
                     home, away = None, None
                 if round != num_rounds:

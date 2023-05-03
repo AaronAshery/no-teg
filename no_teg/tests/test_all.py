@@ -94,13 +94,15 @@ def test_SE_input_result():
 
 TourneyByes = Single_Elimination(FIFA())
 
+
 def test_byes():
-    TourneyByes.add_players([p1,p2,p3,p4,p5,p6])
+    TourneyByes.add_players([p1, p2, p3, p4, p5, p6])
     assert len(TourneyByes.players) == 6
     TourneyByes.start()
     assert len(TourneyByes.players) == 8
     matchups = TourneyByes.get_matchups()
     assert matchups[1]['Home'] == 'Bye'
+
 
 myGame = Game()
 

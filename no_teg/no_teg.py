@@ -327,7 +327,7 @@ class Single_Elimination(Tourney):
         self.started = True
         num_rounds = np.ceil(np.log2(len(self.players)))
         num_players = len(self.players)
-        num_byes = int(2 ** num_rounds - num_players)
+        num_byes = int(2**num_rounds - num_players)
         if num_byes > 0:
             players_with_byes = num_byes * 2
             interval = players_with_byes // num_byes

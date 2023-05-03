@@ -323,7 +323,7 @@ class Single_Elimination(Tourney):
     """
 
     def start(self):
-        extra_labels = self.game.get_labels()
+        labels = self.game.get_labels()
         self.started = True
         num_rounds = np.ceil(np.log2(len(self.players)))
         matchup_counter = 1
@@ -350,7 +350,7 @@ class Single_Elimination(Tourney):
                     "Home_Score": None,
                     "Away_Score": None,
                 }
-                for stat in extra_labels:
+                for stat in labels:
                     self.matchups[matchup_counter][stat] = None
                 matchup_counter += 1
                 p1 += 2
@@ -358,7 +358,7 @@ class Single_Elimination(Tourney):
             round_matches = round_matches // 2
             round += 1
 
-    def input_result(self, matchup_id, away_score, home_score, extra_stats=[]):
+    def input_result(self, matchup_id, away_score, home_score, stats):
         """
         Inputs the result of concluded matchup.
 
@@ -397,9 +397,9 @@ class Single_Elimination(Tourney):
             else:
                 self.matchups[next]["Away"] = winner
         extra_labels = self.game.get_labels()
-        if len(extra_stats) == len(extra_labels):
-            for i in range(len(extra_stats)):
-                self.matchups[matchup_id][extra_labels[i]] = extra_stats[i]
+        if len(stats) == len(extra_labels):
+            for i in range(len(stats)):
+                self.matchups[matchup_id][extra_labels[i]] = stats[i]
 
     def print_matchups(self):
         for i in range(len(self.matchups)):

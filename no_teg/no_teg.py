@@ -124,18 +124,6 @@ class Game:
         return self.labels
 
 
-class FIFA(Game):
-    """
-    A subclass of Game to represent FIFA.
-    """
-
-    def __init__(self):
-        self.name = "FIFA"
-        self.rec_players = 8  # useless?
-        self.rec_tourney = "Single_Elimination"
-        self.labels = []
-
-
 class Tourney:
     """
     A interface-like class to represent a tournament.
@@ -315,190 +303,6 @@ class Tourney:
         pass  # pragma: no cover
 
 
-class Single_Elimination(Tourney):
-    """
-    A subclass of Tourney to represent a single elimination tournament.
-
-    Currently only supports tournaments with the amount of players being a power of 2.
-    """
-
-    def start(self):
-        labels = self.game.get_labels()
-        self.started = True
-        num_rounds = np.ceil(np.log2(len(self.players)))
-        num_players = len(self.players)
-        num_byes = int(2**num_rounds - num_players)
-        if num_byes > 0:
-            players_with_byes = num_byes * 2
-            interval = players_with_byes // num_byes
-            for i in range(num_byes):
-                self.players.insert(i * interval + i, None)
-
-        matchup_counter = 1
-        p1 = 0
-        p2 = 1
-        round_matches = len(self.players) // 2  # players power of 2
-        round = 1
-        updating_round_matches = 0
-        while round_matches > 0:
-            updating_round_matches += round_matches
-            for i in range(round_matches):
-                if round == 1:
-                    home = self.players[p1].get_name() if self.players[p1] is not None else "Bye"
-                    away = self.players[p2].get_name() if self.players[p2] is not None else "Bye"
-                else:
-                    home, away = None, None
-                if round != num_rounds:
-                    next = updating_round_matches + (i // 2) + 1
-                else:
-                    next = None
-                self.matchups[matchup_counter] = {
-                    "Home": home,
-                    "Away": away,
-                    "Next": next,
-                    "Home_Score": None,
-                    "Away_Score": None,
-                }
-                for stat in labels:
-                    self.matchups[matchup_counter][stat] = None
-                matchup_counter += 1
-                p1 += 2
-                p2 += 2
-            round_matches = round_matches // 2
-            round += 1
-
-    def input_result(self, matchup_id, away_score, home_score, stats):
-        """
-        Inputs the result of concluded matchup.
-
-        Parameters
-        ----------
-        matchup_id : int
-            the id corresponding to the matchup in which the score is being inputted
-        away_score : int
-            the score of the away team
-        home_score : int
-            the score of the home team
-        extra_stats : list, optional
-            the extra stats for the game the tournament is managing
-
-        Returns
-        -------
-        None
-        """
-
-        self.matchups[matchup_id]["Home_Score"] = home_score
-        self.matchups[matchup_id]["Away_Score"] = away_score
-        home = self.matchups[matchup_id]["Home"]
-        away = self.matchups[matchup_id]["Away"]
-        if home_score > away_score:
-            winner = home
-        elif away_score > home_score:
-            winner = away
-        else:
-            winner = "Tie"
-            print("This format does not support ties")  # dont let ties be input
-            return False
-        next = self.matchups[matchup_id]["Next"]
-        if next is not None:
-            if matchup_id % 2 == 0:
-                self.matchups[next]["Home"] = winner
-            else:
-                self.matchups[next]["Away"] = winner
-        extra_labels = self.game.get_labels()
-        if len(stats) == len(extra_labels):
-            for i in range(len(stats)):
-                self.matchups[matchup_id][extra_labels[i]] = stats[i]
-
-    def print_matchups(self):
-        for i in range(len(self.matchups)):
-            matchup_id = i + 1
-            home = self.matchups[matchup_id]["Home"]
-            away = self.matchups[matchup_id]["Away"]
-            if home is not None and away is not None:
-                print("{:d}: {:s} (A) vs {:s} (H)".format(matchup_id, away, home))
-
-    def print_results(self):  # pragma: no cover
-        for i in range(len(self.matchups)):
-            matchup_id = i + 1
-            home = self.matchups[matchup_id]["Home"]
-            away = self.matchups[matchup_id]["Away"]
-            home_score = self.matchups[matchup_id]["Home_Score"]
-            away_score = self.matchups[matchup_id]["Away_Score"]
-            if home is not None and away is not None and home_score is not None and away_score is not None:
-                print("{:d}: {:s} ({:d}) vs {:s} ({:d})".format(matchup_id, away, away_score, home, home_score))
-
-
-# circle algorithm
-class Round_Robin(Tourney):
-    """
-    A subclass of Tourney to represent a round robin tournament.
-
-    Supports any number of players and each player plays eachother once.
-    """
-
-    def start(self):
-        extra_labels = self.game.get_labels()
-        self.started = True
-        matchup_counter = 1
-
-        if len(self.players) % 2 == 1:
-            num_players = len(self.players) + 1
-            players = self.players + [Player('dummy')]
-        else:
-            num_players = len(self.players)
-            players = self.players
-        num_rounds = num_players - 1
-        num_matches_per_round = num_players // 2
-
-        # rounds not currently used but could be in the future
-        rounds = []
-        for round_number in range(num_rounds):
-            matches = []
-            for match in range(num_matches_per_round):
-                home = players[match].get_name()
-                away = players[-(match + 1)].get_name()
-                if home != 'dummy' and away != 'dummy':
-                    self.matchups[matchup_counter] = {
-                        "Home": home,
-                        "Away": away,
-                        "Home_Score": None,
-                        "Away_Score": None,
-                    }
-                    for stat in extra_labels:
-                        self.matchups[matchup_counter][stat] = None
-                    matchup_counter += 1
-
-            rounds.append(matches)
-            players.insert(1, players.pop())
-
-    def input_result(self, matchup_id, away_score, home_score, extra_stats=[]):
-        self.matchups[matchup_id]["Home_Score"] = home_score
-        self.matchups[matchup_id]["Away_Score"] = away_score
-        extra_labels = self.game.get_labels()
-        if len(extra_stats) == len(extra_labels):
-            for i in range(len(extra_stats)):
-                self.matchups[matchup_id][extra_labels[i]] = extra_stats[i]
-
-    def print_matchups(self):
-        for i in range(len(self.matchups)):
-            matchup_id = i + 1
-            home = self.matchups[matchup_id]["Home"]
-            away = self.matchups[matchup_id]["Away"]
-            if home is not None and away is not None:
-                print("{:d}: {:s} (A) vs {:s} (H)".format(matchup_id, away, home))
-
-    def print_results(self):  # pragma: no cover
-        for i in range(len(self.matchups)):
-            matchup_id = i + 1
-            home = self.matchups[matchup_id]["Home"]
-            away = self.matchups[matchup_id]["Away"]
-            home_score = self.matchups[matchup_id]["Home_Score"]
-            away_score = self.matchups[matchup_id]["Away_Score"]
-            if home is not None and away is not None and home_score is not None and away_score is not None:
-                print("{:d}: {:s} ({:d}) vs {:s} ({:d})".format(matchup_id, away, away_score, home, home_score))
-
-
 class Player:
     """
     A class to represent a player.
@@ -632,16 +436,17 @@ class Team:
 
 
 def example1():  # pragma: no cover
-    MyTourney = Single_Elimination(FIFA())
-    p1 = Player("Aaron")
-    p2 = Player("Xandra")
-    p3 = Player("Lucas")
-    p4 = Player("Tiffany")
-    MyTourney.add_players([p1, p2, p3, p4])
-    MyTourney.randomize_matchups()
-    MyTourney.start()
-    MyTourney.print_matchups()
-    MyTourney.input_result(1, 2, 3)
-    MyTourney.input_result(2, 10, 1)
-    MyTourney.input_result(3, 4, 1)
-    MyTourney.print_results()
+    # MyTourney = Single_Elimination(FIFA())
+    # p1 = Player("Aaron")
+    # p2 = Player("Xandra")
+    # p3 = Player("Lucas")
+    # p4 = Player("Tiffany")
+    # MyTourney.add_players([p1, p2, p3, p4])
+    # MyTourney.randomize_matchups()
+    # MyTourney.start()
+    # MyTourney.print_matchups()
+    # MyTourney.input_result(1, 2, 3)
+    # MyTourney.input_result(2, 10, 1)
+    # MyTourney.input_result(3, 4, 1)
+    # MyTourney.print_results()
+    return 0

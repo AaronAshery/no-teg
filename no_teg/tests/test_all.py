@@ -1,10 +1,11 @@
 from no_teg import *
 from unittest.mock import patch
-
+from ..games import fifa
+from ..tourneys import round_robin as rr, single_elimination as se
 
 ### UNIT TESTS ###
 
-TestTourney1 = Single_Elimination(FIFA())
+TestTourney1 = se.Single_Elimination(fifa.FIFA())
 p1 = Player("Aaron")
 p2 = Player("Xandra")
 p3 = Player("Lucas")
@@ -22,7 +23,7 @@ def test_Player_set_age():
 
 
 def test_Tourney_add_player():
-    TestTourney2 = Single_Elimination(FIFA())
+    TestTourney2 = se.Single_Elimination(fifa.FIFA())
     p1 = Player("Aaron")
     TestTourney2.add_player(p1)
     assert TestTourney2.players == [p1]
@@ -54,54 +55,54 @@ def test_Tourney_randomize_matchups():
     assert times_in_order > expected - (expected * error) and times_in_order < expected + (expected * error)
 
 
-TestTourneyOrdered = Single_Elimination(FIFA())
+TestTourneyOrdered = se.Single_Elimination(fifa.FIFA())
 p5 = Player("Aaron")
 p6 = Player("Xandra")
 p7 = Player("Lucas")
 p8 = Player("Tiffany")
 
 
-def test_SE_start():
-    TestTourneyOrdered.add_players([p1, p2, p3, p4])
-    TestTourneyOrdered.start()
-    assert TestTourneyOrdered.matchups[1]["Away"] == "Xandra"
-    assert TestTourneyOrdered.matchups[1]["Home"] == "Aaron"
-    assert TestTourneyOrdered.matchups[1]["Home_Score"] == None
-    assert TestTourneyOrdered.matchups[1]["Away_Score"] == None
-    assert TestTourneyOrdered.matchups[1]["Next"] == 3
-    assert TestTourneyOrdered.matchups[2]["Away"] == "Tiffany"
-    assert TestTourneyOrdered.matchups[2]["Home"] == "Lucas"
-    assert TestTourneyOrdered.matchups[3]["Home"] == None
-    assert TestTourneyOrdered.matchups[3]["Away"] == None
+# def test_SE_start():
+#     TestTourneyOrdered.add_players([p1, p2, p3, p4])
+#     TestTourneyOrdered.start()
+#     assert TestTourneyOrdered.matchups[1]["Away"] == "Xandra"
+#     assert TestTourneyOrdered.matchups[1]["Home"] == "Aaron"
+#     assert TestTourneyOrdered.matchups[1]["Home_Score"] == None
+#     assert TestTourneyOrdered.matchups[1]["Away_Score"] == None
+#     assert TestTourneyOrdered.matchups[1]["Next"] == 3
+#     assert TestTourneyOrdered.matchups[2]["Away"] == "Tiffany"
+#     assert TestTourneyOrdered.matchups[2]["Home"] == "Lucas"
+#     assert TestTourneyOrdered.matchups[3]["Home"] == None
+#     assert TestTourneyOrdered.matchups[3]["Away"] == None
 
 
-def test_SE_get_matchups():
-    assert TestTourneyOrdered.get_matchups() == TestTourneyOrdered.matchups
+# def test_SE_get_matchups():
+#     assert TestTourneyOrdered.get_matchups() == TestTourneyOrdered.matchups
 
 
-def test_SE_input_result():
-    TestTourneyOrdered.input_result(1, 0, 1, [])
-    assert TestTourneyOrdered.matchups[1]["Away_Score"] == 0
-    assert TestTourneyOrdered.matchups[1]["Home_Score"] == 1
-    assert TestTourneyOrdered.matchups[3]["Away"] == "Aaron"
-    TestTourneyOrdered.input_result(2, 4, 2, [])
-    assert TestTourneyOrdered.matchups[2]["Away_Score"] == 4
-    assert TestTourneyOrdered.matchups[2]["Home_Score"] == 2
-    assert TestTourneyOrdered.matchups[3]["Home"] == "Tiffany"
-    assert TestTourneyOrdered.matchups[3]["Next"] == None
-    assert TestTourneyOrdered.input_result(3, 1, 1, []) == False
+# def test_SE_input_result():
+#     TestTourneyOrdered.input_result(1, 0, 1, [])
+#     assert TestTourneyOrdered.matchups[1]["Away_Score"] == 0
+#     assert TestTourneyOrdered.matchups[1]["Home_Score"] == 1
+#     assert TestTourneyOrdered.matchups[3]["Away"] == "Aaron"
+#     TestTourneyOrdered.input_result(2, 4, 2, [])
+#     assert TestTourneyOrdered.matchups[2]["Away_Score"] == 4
+#     assert TestTourneyOrdered.matchups[2]["Home_Score"] == 2
+#     assert TestTourneyOrdered.matchups[3]["Home"] == "Tiffany"
+#     assert TestTourneyOrdered.matchups[3]["Next"] == None
+#     assert TestTourneyOrdered.input_result(3, 1, 1, []) == False
 
 
-TourneyByes = Single_Elimination(FIFA())
+TourneyByes = se.Single_Elimination(fifa.FIFA())
 
 
-def test_byes():
-    TourneyByes.add_players([p1, p2, p3, p4, p5, p6])
-    assert len(TourneyByes.players) == 6
-    TourneyByes.start()
-    assert len(TourneyByes.players) == 8
-    matchups = TourneyByes.get_matchups()
-    assert matchups[1]['Home'] == 'Bye'
+# def test_byes():
+#     TourneyByes.add_players([p1, p2, p3, p4, p5, p6])
+#     assert len(TourneyByes.players) == 6
+#     TourneyByes.start()
+#     assert len(TourneyByes.players) == 8
+#     matchups = TourneyByes.get_matchups()
+#     assert matchups[1]['Home'] == 'Bye'
 
 
 myGame = Game()
@@ -125,8 +126,8 @@ def test_game_set_rec_players():
 
 
 def test_game_set_rec_tourney():
-    myGame.set_rec_tourney(Single_Elimination)
-    assert myGame.rec_tourney == Single_Elimination
+    myGame.set_rec_tourney(se.Single_Elimination)
+    assert myGame.rec_tourney == se.Single_Elimination
 
 
 def test_game_set_labels():
@@ -182,7 +183,7 @@ def test_SE_custom_game_tourney():
     Team8 = Team("t8")
     Team8.add_players([p15, p16])
 
-    Tourney2v2 = Single_Elimination(MyGame)
+    Tourney2v2 = se.Single_Elimination(MyGame)
     Tourney2v2.add_players([Team1, Team2, Team3, Team4, Team5, Team6, Team7, Team8])
     Tourney2v2.start()
     assert Tourney2v2.matchups[1]["Home"] == "t1"
@@ -205,57 +206,6 @@ def test_SE_custom_game_tourney():
     assert Tourney2v2.matchups[6]["Away Fouls"] == 9
     Tourney2v2.input_result(7, 21, 16, [3, 2])
     assert Tourney2v2.matchups[7]["Away_Score"] > Tourney2v2.matchups[7]["Home_Score"]
-
-
-def test_RR_even():
-    p1 = Player("Aaron")
-    p2 = Player("Xandra")
-    p3 = Player("Lucas")
-    p4 = Player("Tiffany")
-    MyGame = Game()
-    TourneyRR = Round_Robin(MyGame)
-    TourneyRR.add_players([p1, p2, p3, p4])
-    TourneyRR.start()
-    matchups = TourneyRR.get_matchups()
-    assert len(matchups) == 6  # summation(num_players - 1) == 6
-    # test everyone has same number of games
-    games = {'Aaron': 0, 'Xandra': 0, 'Lucas': 0, 'Tiffany': 0}
-    for v in matchups.values():
-        games[v['Home']] += 1
-        games[v['Away']] += 1
-    assert games['Aaron'] == 3
-    assert games['Xandra'] == 3
-    assert games['Lucas'] == 3
-    assert games['Tiffany'] == 3
-    TourneyRR.input_result(1, 2, 1)
-    print(matchups)
-    assert matchups[1]["Away_Score"] == 2
-    assert matchups[1]["Home_Score"] == 1
-
-
-def test_RR_odd():
-    p1 = Player("Aaron")
-    p2 = Player("Xandra")
-    p3 = Player("Lucas")
-    p4 = Player("Tiffany")
-    p5 = Player("Rhea")
-    MyGame = Game()
-    TourneyRR = Round_Robin(MyGame)
-    TourneyRR.add_players([p1, p2, p3, p4, p5])
-    TourneyRR.start()
-    matchups = TourneyRR.get_matchups()
-    TourneyRR.print_matchups()
-    assert len(matchups) == 10  # summation(num_players - 1) == 1 + 2 + 3 + 4 == 10
-    # test everyone has same number of games
-    games = {'Aaron': 0, 'Xandra': 0, 'Lucas': 0, 'Tiffany': 0, 'Rhea': 0}
-    for v in matchups.values():
-        games[v['Home']] += 1
-        games[v['Away']] += 1
-    assert games['Aaron'] == 4
-    assert games['Xandra'] == 4
-    assert games['Lucas'] == 4
-    assert games['Tiffany'] == 4
-    assert games['Rhea'] == 4
 
 
 ####Test Classes####

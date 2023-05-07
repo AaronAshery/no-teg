@@ -50,6 +50,7 @@ def test_rr_input_result(rr_basic, create_players):
     assert rr_basic.matchups[1]["Away_Score"] == 0
     assert rr_basic.matchups[1]["Home_Score"] == 1
 
+
 def test_rr_input_result_more(rr_more, create_players):
     players = create_players(4)
     rr_more.add_players(players)

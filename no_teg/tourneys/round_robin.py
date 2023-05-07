@@ -63,7 +63,7 @@ class Round_Robin(Tourney):
             for i in range(len(extra_stats)):
                 self.matchups[matchup_id][extra_labels[i]] = extra_stats[i]
 
-    def print_matchups(self):  #pragma: no cover
+    def print_matchups(self):  # pragma: no cover
         for i in range(len(self.matchups)):
             matchup_id = i + 1
             home = self.matchups[matchup_id]["Home"]

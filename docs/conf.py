@@ -22,7 +22,7 @@ def setup(app):
 project = 'no-teg'
 copyright = '2023, Aaron Ashery'
 author = 'Aaron Ashery'
-release = '0.2.0'
+release = '0.2.1'
 
 master_doc="index"
 

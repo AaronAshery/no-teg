@@ -57,7 +57,6 @@ class Single_Elimination(Tourney):
 
         for i in range(len(self.matchups)):
             away = self.matchups[i + 1]["Away"]
-            print(away)
             if away == "Bye":
                 self.input_result(i + 1, 0, 3, [])
 

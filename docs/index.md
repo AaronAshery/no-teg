@@ -62,9 +62,6 @@ MyTourney.print_results()
 ```
 
 # Further Examples
-```python
-import no_teg as nt
-```
 
 ## Players
 ```python

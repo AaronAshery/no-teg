@@ -17,15 +17,16 @@ A library for running tournaments
  
 ## Usage example: Create and run a basic single elimination tourament.
 ```python
-from no_teg import *
+import no_teg as nt
+from no_teg.tourneys import Single_Elimination
 
-p1 = Player("P1")
-p2 = Player("P2")
-p3 = Player("P1")
-p4 = Player("P2")
+p1 = nt.Player("P1")
+p2 = nt.Player("P2")
+p3 = nt.Player("P3")
+p4 = nt.Player("P4")
 
-MyGame = Game()
-MyTourney = Single_Elimination(MyGame)
+MyGame = nt.Game()
+MyTourney = Single_Elimination.Single_Elimination(MyGame)
 MyTourney.add_players([p1, p2, p3, p4])
 MyTourney.start()
  
@@ -33,30 +34,35 @@ MyTourney.print_matchups()
 1: P2 (A) vs P1 (H)
 2: P4 (A) vs P3 (H)
 
-# arguments are matchup_id, away_score, home_score
-MyTourney.input_result(1, 3, 2)
-MyTourney.input_result(2, 0, 4)
+# arguments are matchup_id, away_score, home_score, extra stats (see Further Examples on docs page)
+MyTourney.input_result(1, 3, 2, [])
+MyTourney.input_result(2, 0, 4, [])
 
 MyTourney.print_results()
 1: P2 (3) vs P1 (2)
 2: P4 (0) vs P3 (4)
 
-#P2 and P3 advance to the finals
+# P2 and P3 advance to the finals
 MyTourney.print_matchups()
 1: P2 (A) vs P1 (H)
 2: P4 (A) vs P3 (H)
 3: P2 (A) vs P3 (H)
 
-#P2 wins the tournament!
-MyTourney.input_result(3, 2, 1)
+# P2 wins the tournament!
+MyTourney.input_result(3, 2, 1, [])
 MyTourney.print_results()
 1: P2 (3) vs P1 (2)
 2: P4 (0) vs P3 (4)
 3: P2 (2) vs P3 (1)
 
 ```
- 
 
+
+## Available Tourneys
+- Single_Elimination
+- Round_Robin
+
+ 
 ## Makefile commands:
 - `make`: list available commands
 - `make develop`: install and build this library and its dependencies using `pip`

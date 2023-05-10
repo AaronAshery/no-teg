@@ -18,7 +18,7 @@ A library for running tournaments
 ## Usage example: Create and run a basic single elimination tourament.
 ```python
 import no_teg as nt
-from no_teg.tourneys import Single_Elimination
+from no_teg.tourneys import single_elimination
 
 p1 = nt.Player("P1")
 p2 = nt.Player("P2")
@@ -26,7 +26,7 @@ p3 = nt.Player("P3")
 p4 = nt.Player("P4")
 
 MyGame = nt.Game()
-MyTourney = Single_Elimination.Single_Elimination(MyGame)
+MyTourney = single_elimination.Single_Elimination(MyGame)
 MyTourney.add_players([p1, p2, p3, p4])
 MyTourney.start()
  

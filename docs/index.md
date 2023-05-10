@@ -8,7 +8,7 @@
 # Usage example: Create and run a basic single elimination tourament.
 ```python
 import no_teg as nt
-from no_teg.tourneys import Single_Elimination
+from no_teg.tourneys import single_elimination
 
 p1 = nt.Player("P1")
 p2 = nt.Player("P2")
@@ -16,7 +16,7 @@ p3 = nt.Player("P3")
 p4 = nt.Player("P4")
 
 MyGame = nt.Game()
-MyTourney = Single_Elimination.Single_Elimination(MyGame)
+MyTourney = single_elimination.Single_Elimination(MyGame)
 MyTourney.add_players([p1, p2, p3, p4])
 MyTourney.start()
  
@@ -87,14 +87,14 @@ team1.get_name()
 PingPong = nt.Game()
 PingPong.set_name("Ping Pong")
 PingPong.set_rec_players(4)
-PingPong.set_rec_tourney(Single_Elimination.Single_Elimination)
+PingPong.set_rec_tourney(single_elimination.Single_Elimination)
 PingPong.set_labels(["Away_Aces", "Home_Aces"])
 
 #import a default game
-from no_teg.games import FIFA
+from no_teg.games import fifa
 
-fifa = FIFA.FIFA()
-fifa_tourney = Single_Elimination.Single_Elimination(fifa)
+fifa_game = fifa.FIFA()
+fifa_tourney = single_elimination.Single_Elimination(fifa_game)
 
 
 ```
@@ -103,9 +103,9 @@ fifa_tourney = Single_Elimination.Single_Elimination(fifa)
 ## Round-Robin Tournament
 ```python
 
-from no_teg.tourneys import Round_Robin
+from no_teg.tourneys import round_robin
 
-RR = Round_Robin.Round_Robin(PingPong)
+RR = round_robin.Round_Robin(PingPong)
 RR.add_players([p1, p2, p3, p4, p5])
 RR.start()
 RR.print_matchups()
@@ -126,7 +126,7 @@ RR.print_matchups()
 ## Single Elimination Tournament With Extra Stats
 ```python
 
-RR2 = Round_Robin.Round_Robin(PingPong)
+RR2 = round_robin.Round_Robin(PingPong)
 RR2.add_players([p1, p2, p3])
 RR2.start()
 RR2.print_matchups()
